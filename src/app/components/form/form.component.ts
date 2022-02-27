@@ -10,9 +10,9 @@ import { FormBuilder } from '@angular/forms';
 export class FormComponent implements OnInit {
 
   form = this.fb.group({
-    lng: this.fb.control(''),
-    lat: this.fb.control(''),
-    azim: this.fb.control(''),
+    lng: this.fb.control(this.service.form.get('lng').value),
+    lat: this.fb.control(this.service.form.get('lat').value),
+    azim: this.fb.control(this.service.form.get('azim').value),
   });
 
   constructor(public service: ServiceService, private fb: FormBuilder) { }

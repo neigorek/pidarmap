@@ -7,9 +7,9 @@ import { AbstractControl, FormBuilder } from '@angular/forms';
 export class ServiceService {
 
   public form = this.fb.group({
-    lng: this.fb.control(0),
-    lat: this.fb.control(0),
-    azim: this.fb.control(0),
+    lng: this.fb.control(30.721376),
+    lat: this.fb.control(50.296032),
+    azim: this.fb.control(100),
   });
   constructor(private fb: FormBuilder) { }
 

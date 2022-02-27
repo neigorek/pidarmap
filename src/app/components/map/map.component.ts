@@ -13,6 +13,7 @@ export class MapComponent implements OnInit {
   @Input() lng: number;
   @Input() gradus: number;
 
+  radius = 6371000;
   managerOptions = {
     drawingControl: true,
     drawingControlOptions: {
@@ -40,7 +41,8 @@ export class MapComponent implements OnInit {
   line;
   map;
 
-  constructor(private service: ServiceService) { }
+  constructor(private service: ServiceService) {
+  }
 
   ngOnInit(): void {
     this.service.form.valueChanges.subscribe((values) => {
@@ -62,20 +64,20 @@ export class MapComponent implements OnInit {
         this.prevIt.setMap(null);
       }
       const find = this.findCoords(this.markers[0].lat, this.markers[0].lng, this.markers[0].azim);
-      var myCoordinates = [
+      let myCoordinates = [
         new google.maps.LatLng(this.markers[0].lat, this.markers[0].lng),
         new google.maps.LatLng(find[0], find[1]),
         new google.maps.LatLng(find[2], find[3]),
       ];
-      var polyOptions = {
+      let polyOptions = {
         path: myCoordinates,
-        strokeColor: "#FF0000",
+        strokeColor: "#ffdd00",
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: "#0000FF",
-        fillOpacity: 0.6
+        fillOpacity: 0.4
       }
-      var it = new google.maps.Polygon(polyOptions);
+      let it = new google.maps.Polygon(polyOptions);
       this.prevIt = it;
       it.setMap(map);
     }
@@ -83,25 +85,24 @@ export class MapComponent implements OnInit {
 
   findCoords(lat, lang, azim): any[] {
     const staticVel = 60;
-
-    const [x1, y1] = [lat, lang];
-    const S = 1;
+    const S = 10000;
     let x2, y2, x3, y3;
-    if (azim > 0 && azim < 91) {
-      [x2, y2] = [x1 + (S * Math.cos(azim - staticVel)), y1 + (S * Math.sin(azim - staticVel))];
-      [x3, y3] = [x1 + (S * Math.cos(azim + staticVel)), y1 + (S * Math.sin(azim + staticVel))];
-    } else if (azim > 90 && azim < 181) {
-      [x2, y2] = [x1 - (S * Math.cos(azim - staticVel)), y1 + (S * Math.sin(azim - staticVel))];
-      [x3, y3] = [x1 - (S * Math.cos(azim + staticVel)), y1 + (S * Math.sin(azim + staticVel))];
-    } else if (azim > 180 && azim < 270) {
-      [x2, y2] = [x1 - (S * Math.cos(azim - staticVel)), y1 - (S * Math.sin(azim - staticVel))];
-      [x3, y3] = [x1 - (S * Math.cos(azim + staticVel)), y1 - (S * Math.sin(azim + staticVel))];
-    } else if (azim > 270 && azim < 361) {
-      [x2, y2] = [x1 + (S * Math.cos(azim - staticVel)), y1 - (S * Math.sin(azim - staticVel))];
-      [x3, y3] = [x1 + (S * Math.cos(azim + staticVel)), y1 - (S * Math.sin(azim + staticVel))];
-    }
+    const k_lat = (Math.PI * this.radius) / 180;
+    const k_lang = (Math.PI * this.radius * Math.sin(this.degreesToRadians(lat))) / 180;
 
-    return [x2, y2, x3, y3];
+    x2 = S * Math.sin(this.degreesToRadians(azim - staticVel));
+    y2 = S * Math.cos(this.degreesToRadians(azim - staticVel));
+
+    x3 = S * Math.sin(this.degreesToRadians(azim + staticVel));
+    y3 = S * Math.cos(this.degreesToRadians(azim + staticVel));
+
+    const [lat2, lang2, lat3, lang3] = [
+      lat + y2 / k_lat,
+      lang + x2 / k_lang,
+      lat + y3 / k_lat,
+      lang + x3 / k_lang,
+    ];
+    return [lat2, lang2, lat3, lang3];
   }
 
   selectMarker(event) {
@@ -109,7 +110,6 @@ export class MapComponent implements OnInit {
       lat: event.latitude,
       lng: event.longitude
     };
-    // this.draw(this.selectedMarker);
   }
 
   draw({lat, lng}): void {
@@ -130,5 +130,10 @@ export class MapComponent implements OnInit {
 
   min(coordType: string) {
     return Math.min(...this.markers.map(marker => marker[coordType]));
+  }
+
+  degreesToRadians(degrees) {
+    var pi = Math.PI;
+    return degrees * (pi/180);
   }
 }
