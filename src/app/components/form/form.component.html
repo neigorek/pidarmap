@@ -1,0 +1,6 @@
+<form (submit)="submitForm()" [formGroup]="form" *ngIf="form">
+  <input placeholder="долгота" type="number" [formControl]="form.get('lng')"/>
+  <input placeholder="широта" type="number" [formControl]="form.get('lat')"/>
+  <input placeholder="азимут" type="number" [formControl]="form.get('azim')"/>
+  <button type="submit">Click</button>
+</form>
