@@ -1,0 +1,22 @@
+<div class="column">
+  <div class="row">
+    <app-form></app-form>
+  </div>
+  <div class="row">
+    <agm-map
+      class="agm-map"
+      [latitude]="lat"
+      [longitude]="lng"
+      [mapTypeId]="mapType"
+      (mapReady)="onMapReady($event)"
+    >
+      <agm-marker
+        *ngFor="let marker of markers"
+        [latitude]="marker.lat"
+        [longitude]="marker.lng"
+        [opacity]="marker.alpha"
+        (markerClick)="selectMarker($event)"
+      ></agm-marker>
+    </agm-map>
+  </div>
+</div>

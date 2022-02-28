@@ -45,6 +45,12 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // set default
+    this.service.setVal({
+      lng: 30.721376,
+      lat: 50.296032,
+      azim: 100
+    });
     this.service.form.valueChanges.subscribe((values) => {
       this.lat = values.lat;
       this.lng = values.lng;

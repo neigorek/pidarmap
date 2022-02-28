@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ServiceService } from '../../services/service.service';
+import { ServiceService } from '../../../services/service.service';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
