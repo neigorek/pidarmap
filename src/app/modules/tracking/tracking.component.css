@@ -2,6 +2,23 @@
     cursor: pointer;
 }
 
+.person-header {
+    display: flex;;
+    margin-top: auto;
+    margin-bottom: auto;
+    min-height: 2rem
+}
+ 
+.person-header h6 {
+    margin: auto 0;
+    margin-right: .5rem;
+} 
+
+.person-header i {
+    display: flex;
+    margin: auto 0;
+}
+
 .input-custom-label {
     width: 100px;
 }

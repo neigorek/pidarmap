@@ -8,24 +8,26 @@
     <div class="row align-items-start">
 
         <div class="col-3">
-            <!-- <ul *ngIf="persons" class="list-group list-group-item-action">
-                <li class="list-group-item"  *ngFor="let person of persons;" (click)="onPersonSelected(person)" >{{person.name}}</li>
-                 -->
-                <table *ngIf="persons" class="table table-striped table-hover">
-                    <thead>
-                      <tr>
+            <div class="person-header">
+                <h6>Persons</h6>
+                <h6 *ngIf="person"> '{{person.name}}' </h6>
+                <i *ngIf="person" class="fas fa-pen pointer"  data-bs-toggle="modal" data-bs-target="#editPersonName" (click)="onPersonNameModalToOpen(person)" ></i>
+            </div>
+
+            <table *ngIf="persons" class="table table-striped table-hover">
+                <thead>
+                    <tr>
                         <th scope="col">#</th>
                         <th scope="col">Ім'я</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let selectedPerson of persons; let i = index;" [ngClass]="{'table-active' : selectedPerson.id == person?.id }" class="pointer"
-                       (click)="onPersonSelected(selectedPerson)">
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let selectedPerson of persons; let i = index;" class="pointer" 
+                        [ngClass]="{'table-active' : selectedPerson.id == person?.id }" (click)="onPersonSelected(selectedPerson)">
                         <th>{{i}}</th>
-                        <td >{{selectedPerson.name}}</td>
-                      </tr>
-                </table>
-       
+                        <td>{{selectedPerson.name}}</td>
+                    </tr>
+            </table>
         </div>
 
         <div class="col-9">
@@ -63,11 +65,11 @@
 
 </div>
 
-  <div class="modal fade" id="addTrackModal" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addTrackModal" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="addTrackLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Додати точку трекінгу</h5>
+          <h5 class="modal-title" id="addTrackLabel">Додати точку трекінгу</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -98,8 +100,32 @@
 
         </div>
         <div class="modal-footer">
-          <button #dismissButton type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onTrackToAdd(false)">Скасувати</button>
+          <button #dismissButtonForAddTrackModal type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onTrackToAdd(false)">Скасувати</button>
           <button type="button" class="btn btn-primary" (click)="onTrackToAdd(true)">Додати</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+  <div class="modal fade" id="editPersonName" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="editPersonNameLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPersonNameLabel">Редагувати ім'я особи</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <label for="person-name-input" class="col-form-label">Ім'я особи:  </label>
+                <input #personNameField type="text" class="form-control" id="person-name-input">
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button #dismissButtonForChangeNameModal type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onPersonNameToChange(false)">Скасувати</button>
+          <button type="button" class="btn btn-primary" (click)="onPersonNameToChange(true)">Зберегти</button>
         </div>
       </div>
     </div>

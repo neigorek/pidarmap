@@ -54,6 +54,11 @@ export class TrackingService {
       return of<boolean>(true);
     }
 
+    updatePersoneName(pesoneId: string, newName: string) : Observable<any> {
+
+      return of<boolean>(true);
+    }
+
 
 
 

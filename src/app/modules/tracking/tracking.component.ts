@@ -23,7 +23,10 @@ export class TrackingComponent implements OnInit, OnDestroy {
   @ViewChild('lngField', { static: false }) lngField: ElementRef;
   @ViewChild('latField', { static: false }) latField: ElementRef;
   @ViewChild('azimField', { static: false }) azimField: ElementRef;
-  @ViewChild('dismissButton', { static: false }) dismissButton: ElementRef;
+  @ViewChild('dismissButtonForAddTrackModal', { static: false }) dismissButtonForAddTrackModal: ElementRef;
+
+  @ViewChild('personNameField', { static: false }) personNameField: ElementRef;
+  @ViewChild('dismissButtonForChangeNameModal', { static: false }) dismissButtonForChangeNameModal: ElementRef;
 
   
 
@@ -37,7 +40,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
 
 
   onPersonSelected(person: personDto): void {
-    console.log(person);
     if (this.person) {
       if (this.person.id == person.id) {
         this.person = null;
@@ -52,6 +54,7 @@ export class TrackingComponent implements OnInit, OnDestroy {
   onTrackSelected(track: trackDto): void {
     console.log(track);
   }
+
 
   onTrackToAdd(shouldAdd: boolean): void {
     if (!shouldAdd) {
@@ -75,9 +78,10 @@ export class TrackingComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.dismissButton.nativeElement.click();
+    this.dismissButtonForAddTrackModal.nativeElement.click();
     this.resetAddTrackModalFields();
   }
+
 
   onTrackDeleted(track: trackDto) {
     const result = confirm(`Видалити трек ${track.id}?`);
@@ -94,6 +98,37 @@ export class TrackingComponent implements OnInit, OnDestroy {
       .subscribe();
   }
  
+
+  onPersonNameModalToOpen(person: personDto): void {
+    this.personNameField.nativeElement.value = person.name;
+  }
+
+
+  onPersonNameToChange(shouldChange: boolean): void {
+    if (!shouldChange) {
+      return;
+    }
+
+    if ( this.personNameField.nativeElement.value === this.person.name) {
+      this.dismissButtonForChangeNameModal.nativeElement.click();
+      this.resetChangePersonNameModalFields();
+      return;
+    }
+
+    this.trackingServics
+      .updatePersoneName(this.person.id, this.personNameField.nativeElement.value)
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        concatMap(() => this.loadAndSetPersons())
+      )
+      .subscribe();
+
+    this.dismissButtonForChangeNameModal.nativeElement.click();
+    this.resetChangePersonNameModalFields();
+  }
+
+
+
 
   private loadAndSetTracks(personId: string): Observable<void> {
     return this.trackingServics
@@ -122,6 +157,10 @@ export class TrackingComponent implements OnInit, OnDestroy {
     this.azimField.nativeElement.value = '';
     this.latField.nativeElement.value = '';
     this.lngField.nativeElement.value = '';
+  }
+
+  private resetChangePersonNameModalFields() {
+    this.personNameField.nativeElement.value = '';
   }
 
   ngOnDestroy(): void {
