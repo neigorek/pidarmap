@@ -49,6 +49,11 @@ export class TrackingService {
       return of<boolean>(true);
     }
 
+    addTrack(track: trackDto): Observable<any> {
+
+      return of<boolean>(true);
+    }
+
 
 
 

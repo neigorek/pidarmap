@@ -39,7 +39,7 @@
                     <th scope="col">Широта</th>
                     <th scope="col">Азимут</th>
                     <th scope="col">Дата:час</th>
-                    <th scope="col" class="pointer" (click)="onTrackToAdd()">+</th>
+                    <th scope="col" class="pointer" data-bs-toggle="modal" data-bs-target="#addTrackModal">+</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -49,8 +49,8 @@
                     <td (click)="onTrackSelected(track)">{{track.address}}</td>
                     <td (click)="onTrackSelected(track)">{{track.lng }}</td>
                     <td (click)="onTrackSelected(track)">{{track.lat}}</td>
-                    <td (click)="onTrackSelected(track)">{{track.azim }}</td>
-                    <td (click)="onTrackSelected(track)">{{track.dateTime.getDay()}}.{{track.dateTime.getMonth()}}.{{track.dateTime.getFullYear()}} / {{track.dateTime.getMinutes()}}:{{track.dateTime.getHours()}}</td>
+                    <td (click)="onTrackSelected(track)">{{track.azim}}</td>
+                    <td (click)="onTrackSelected(track)">{{track.dateTime.toLocaleDateString()}} : {{track.dateTime.toLocaleTimeString()}}</td>
                     <td class="pointer" (click)="onTrackDeleted(track)" > - </td>
                   </tr>
 
@@ -63,6 +63,47 @@
 
 </div>
 
+  <div class="modal fade" id="addTrackModal" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Додати точку трекінгу</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <label for="address-input" class="col-form-label">Адреса:  </label>
+                <input #addressField type="text" class="form-control" id="address-input">
+            </div>
+            
+            <hr>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text input-custom-label" id="lng-input">Довгота:</span>
+                <input #lngField type="text" class="form-control" aria-label="Sizing example input" aria-describedby="lng-input">
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text input-custom-label" id="lat-input">Широта:</span>
+                <input #latField type="text" class="form-control" aria-label="Sizing example input" aria-describedby="lat-input">
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text input-custom-label" id="azim-input">Азимут:</span>
+                <input #azimField type="text" class="form-control" aria-label="Sizing example input" aria-describedby="azim-input">
+            </div>
+
+            <button type="button" class="btn btn-primary">Вирахувати з Google Maps</button>
+
+
+        </div>
+        <div class="modal-footer">
+          <button #dismissButton type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onTrackToAdd(false)">Скасувати</button>
+          <button type="button" class="btn btn-primary" (click)="onTrackToAdd(true)">Додати</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   
