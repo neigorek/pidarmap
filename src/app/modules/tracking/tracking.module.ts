@@ -9,6 +9,7 @@ import { TrackingRoutingModule } from './tracking-routing.module';
   imports: [
     CommonModule,
     TrackingRoutingModule
-  ]
+  ],
+  providers: []
 })
 export class TrackingModule { }
