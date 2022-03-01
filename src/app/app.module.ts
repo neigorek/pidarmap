@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { TrackingComponent } from './modules/tracking/tracking.component';
 import { AdminComponent } from './modules/admin/admin.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AdminComponent } from './modules/admin/admin.component';
       apiKey: 'AIzaSyByOQ1tHFjLrXlYtDVUAqI5WRNUzNZZtsE',
       libraries: ['drawing']
     }),
+    HttpClientModule,
     ReactiveFormsModule
   ],
   providers: [],

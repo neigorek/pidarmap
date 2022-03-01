@@ -1,0 +1,7 @@
+.pointer:hover {
+    cursor: pointer;
+}
+
+.input-custom-label {
+    width: 100px;
+}
