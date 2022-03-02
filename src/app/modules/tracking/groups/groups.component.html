@@ -1,0 +1,162 @@
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-6">
+            <div *ngIf="groups" class="table-header">
+                <h6>Групи</h6>
+                <h6 *ngIf="group"> '{{group.name}}' </h6>
+                <i *ngIf="group" class="fas fa-pen pointer"  data-bs-toggle="modal" data-bs-target="#editGroupName" (click)="onGroupModalToOpen(group)" ></i>
+            </div>
+
+            <table *ngIf="groups" class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Назва</th>
+                        <th scope="col">Опис</th>
+                        <th scope="col" class="pointer" data-bs-toggle="modal" data-bs-target="#addGroupModal">+</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let selectedGroup of groups; let i = index;" [ngClass]="{'table-active' : selectedGroup.id == group?.id }">
+                        <th (click)="onGroupSelected(selectedGroup)">{{i}}</th>
+                        <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.name}}</td>
+                        <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.description}}</td>
+                        <td class="pointer" (click)="onGroupDeleted(selectedGroup)"> - </td>
+                    </tr>
+            </table>
+        </div>
+
+        <div class="col-6">
+            <div *ngIf="persones" class="table-header">
+                <h6>Особи</h6>
+                <h6 *ngIf="person"> '{{person.name}}' </h6>
+                <i *ngIf="person" class="fas fa-pen pointer"  data-bs-toggle="modal" data-bs-target="#editPersonNameFromGroupPage" (click)="onPersonChangeDescriptionModalToOpen(person)" ></i>
+            </div>
+
+            <table *ngIf="persones" class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Ім'я</th>
+                        <th scope="col">Опис</th>
+                        <th scope="col"></th>
+                        <th scope="col" class="pointer" data-bs-toggle="modal" data-bs-target="#addPersonModal">+</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let selectedPerson of persones; let i = index;" [ngClass]="{'table-active' : selectedPerson.id == person?.id }" >
+                        <th (click)="onPersonSelected(selectedPerson)">{{i}}</th>
+                        <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.name}}</td>
+                        <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.description}}</td>
+                        <td> 
+                            <input type="checkbox" class="form-check-input" title="Показувати на карті" 
+                                [(ngModel)]="selectedPerson.shouldBeTracked" (change)="toggleTracking(selectedPerson)" />
+                        </td>
+                        <td class="pointer" (click)="onPersonDeleted(selectedPerson)" > - </td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+  
+<div class="modal fade" id="editPersonNameFromGroupPage" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="editPersonNameFromGroupPageLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="editPersonNameFromGroupPageLabel">Редагувати особу</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="person-name-input" class="col-form-label">Ім'я особи:  </label>
+                    <input #editPersonNameFromGroupPageField type="text" class="form-control" id="person-name-input">
+                </div>
+                <div>
+                    <label for="person-desc-input" class="col-form-label">Опис особи:  </label>
+                    <input #editPersonDescriptionFromGroupPageField type="text" class="form-control" id="person-desc-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button #dismissButtonForChangePersonDescripitonModal type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onPersonNameToChangeFromGroupPage(false)">Скасувати</button>
+                <button type="button" class="btn btn-primary" (click)="onPersonNameToChangeFromGroupPage(true)">Зберегти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+<div class="modal fade" id="editGroupName" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="editGroupNameLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="editGroupNameLabel">Редагувати назву групи</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="group-name-input" class="col-form-label">Назва групи:  </label>
+                    <input #editGroupNameField type="text" class="form-control" id="group-name-input">
+                </div>
+                <div>
+                    <label for="group-desc-input" class="col-form-label">Опис групи:  </label>
+                    <input #editGroupDescriptionField type="text" class="form-control" id="group-desc-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button #dismissButtonForChangeGroupNameModal type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onGroupNameToChange(false)">Скасувати</button>
+                <button type="button" class="btn btn-primary" (click)="onGroupNameToChange(true)">Зберегти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addGroupModal" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="addGroupModalLabel">Створити групу</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="new-group-name-input" class="col-form-label">Назва групи:  </label>
+                    <input #addGroupNameField type="text" class="form-control" id="new-group-name-input">
+                </div>
+                <div>
+                    <label for="new-group-desc-input" class="col-form-label">Опис групи:  </label>
+                    <input #addGroupDescriptionField type="text" class="form-control" id="new-group-desc-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button #dismissButtonForNewGroupModal type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onGroupToAdd(false)">Скасувати</button>
+                <button type="button" class="btn btn-primary" (click)="onGroupToAdd(true)">Зберегти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addPersonModal" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="addPersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="addPersonModalLabel">Додати особу</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="new-person-name-input" class="col-form-label">Ім'я особи:  </label>
+                    <input #addPersonNameField type="text" class="form-control" id="new-person-name-input">
+                </div>
+                <div>
+                    <label for="new-person-desc-input" class="col-form-label">Опис особи:  </label>
+                    <input #addPersonDescriptionField type="text" class="form-control" id="new-person-desc-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button #dismissButtonForNewPersonModal type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onPersonToAdd(false)">Скасувати</button>
+                <button type="button" class="btn btn-primary" (click)="onPersonToAdd(true)">Зберегти</button>
+            </div>
+        </div>
+    </div>
+</div>

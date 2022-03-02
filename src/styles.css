@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+
+.pointer:hover {
+    cursor: pointer;
+}
+
+.table-header {
+    display: flex;;
+    margin-top: auto;
+    margin-bottom: auto;
+    min-height: 2rem
+}
+ 
+.table-header h6 {
+    margin: auto 0;
+    margin-right: .5rem;
+} 
+
+.table-header i {
+    display: flex;
+    margin: auto 0;
+}
+
+.input-custom-label {
+    width: 100px;
+}
+
+.table-active {
+    background-color: #cfe2ff;
+}
