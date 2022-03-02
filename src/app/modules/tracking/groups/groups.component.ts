@@ -33,12 +33,19 @@ export class GroupsComponent implements OnInit, OnDestroy {
   persones: PersonDto[];
   person: PersonDto;
 
-  constructor(private trackingServics: TrackingService) { }
+  constructor(private trackingService: TrackingService) { }
 
   ngOnInit(): void {
     this.loadAndSetGroups().subscribe();
   }
 
+  toggleTracking(person: PersonDto){
+    this.trackingService
+      .togglePersonTracking(person.id, person.shouldBeTracked)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe();
+  }
+ 
   onPersonToAdd(shouldAdd: boolean) {
     if (!shouldAdd) {
       return;
@@ -51,7 +58,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       shouldBeTracked: true
     };
 
-    this.trackingServics
+    this.trackingService
       .addPerson(newPerson)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -76,7 +83,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       id: ''
     };
 
-    this.trackingServics
+    this.trackingService
       .addGroup(newGroup)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -97,7 +104,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.trackingServics
+    this.trackingService
       .deletePerson(person.id)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -133,7 +140,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       shouldBeTracked: this.person.shouldBeTracked
     }
 
-    this.trackingServics
+    this.trackingService
       .updateNameNameAndDescription(personWithNewNameAndDescription)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -166,7 +173,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.trackingServics
+    this.trackingService
       .deleteGroup(group.id)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -196,7 +203,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       description: this.editGroupDescriptionField.nativeElement.value
     }
 
-    this.trackingServics
+    this.trackingService
       .updateGroupNameAndDescription(groupWithNewNameAndDescription)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -214,7 +221,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
 
   private loadAndSetGroups(): Observable<void> {
-    return this.trackingServics
+    return this.trackingService
       .getGroups()
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -225,7 +232,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
   }
 
   private loadAndSetPersones(groupId: string): Observable<void> {
-    return this.trackingServics
+    return this.trackingService
       .getPersones(groupId)
       .pipe(
         takeUntil(this.unsubscribe$),

@@ -39,6 +39,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Ім'я</th>
                         <th scope="col">Опис</th>
+                        <th scope="col"></th>
                         <th scope="col" class="pointer" data-bs-toggle="modal" data-bs-target="#addPersonModal">+</th> 
                     </tr>
                 </thead>
@@ -47,6 +48,10 @@
                         <th (click)="onPersonSelected(selectedPerson)">{{i}}</th>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.name}}</td>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.description}}</td>
+                        <td> 
+                            <input type="checkbox" class="form-check-input" title="Показувати на карті" 
+                                [(ngModel)]="selectedPerson.shouldBeTracked" (change)="toggleTracking(selectedPerson)" />
+                        </td>
                         <td class="pointer" (click)="onPersonDeleted(selectedPerson)" > - </td>
                     </tr>
             </table>

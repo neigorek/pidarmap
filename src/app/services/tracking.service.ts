@@ -32,11 +32,11 @@ export class TrackingService {
   ]
 
   private tracks: TrackDto[] = [
-     {id: "1", address: "test address", azim: 100, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "2", address: "test very loong address", azim: 400, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "3", address: "test", azim: 150, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "4", address: "some address here", azim: 200, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "5", address: "Moskov", azim: 300, lat: 10.296032, lng: 70.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) }
+     {id: "1", address: "У сраці одного росіянського президента", azim: 100, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
+     {id: "2", address: "В сирій земельці", azim: 400, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
+     {id: "3", address: "В Києвському морі", azim: 150, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
+     {id: "4", address: "На узбережжі азовського моря", azim: 200, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
+     {id: "5", address: "На дні Чорного моря біля острова Зміїний", azim: 300, lat: 10.296032, lng: 70.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) }
   ]
   
   private groups: GroupDto[] = [
@@ -113,6 +113,11 @@ export class TrackingService {
 
     updateNameNameAndDescription(person: PersonDto): Observable<any> {
 
+      return of<boolean>(true);
+    }
+
+    togglePersonTracking(personId: string, hide: boolean): Observable<any> {
+      
       return of<boolean>(true);
     }
 
