@@ -8,13 +8,17 @@ import { HeaderComponent } from './components/header/header.component';
 import { TrackingComponent } from './modules/tracking/tracking.component';
 import { AdminComponent } from './modules/admin/admin.component';
 import { HttpClientModule } from '@angular/common/http';
+import { GroupsComponent } from './modules/tracking/groups/groups.component';
+import { MainDotsComponent } from './modules/tracking/main-dots/main-dots.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     TrackingComponent,
-    AdminComponent
+    AdminComponent,
+    GroupsComponent,
+    MainDotsComponent
   ],
   imports: [
     BrowserModule,
