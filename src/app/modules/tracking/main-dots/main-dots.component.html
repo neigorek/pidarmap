@@ -2,7 +2,7 @@
     <div class="row align-items-start">
         <div class="col-3">
             <div class="table-header">
-                <h6>Persones</h6>
+                <h6>Особи</h6>
                 <h6 *ngIf="person"> '{{person.name}}' </h6>
                 <i *ngIf="person" class="fas fa-pen pointer"  data-bs-toggle="modal" data-bs-target="#editPersonName" (click)="onPersonNameModalToOpen(person)" ></i>
             </div>
@@ -41,15 +41,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let track of tracks; let i = index;">
-                    <th scope="row" (click)="onTrackSelected(track)">{{i}}</th>
-                    <th (click)="onTrackSelected(track)">{{track.id}}</th>
-                    <td (click)="onTrackSelected(track)">{{track.address}}</td>
-                    <td (click)="onTrackSelected(track)">{{track.lng }}</td>
-                    <td (click)="onTrackSelected(track)">{{track.lat}}</td>
-                    <td (click)="onTrackSelected(track)">{{track.azim}}</td>
-                    <td (click)="onTrackSelected(track)">{{track.dateTime.toLocaleDateString()}} : {{track.dateTime.toLocaleTimeString()}}</td>
-                    <td class="pointer" (click)="onTrackDeleted(track)" > - </td>
+                  <tr *ngFor="let track of tracks; let i = index;" class="pointer" (click)="onTrackSelected(track)">
+                    <th scope="row" >{{i}}</th>
+                    <th>{{track.id}}</th>
+                    <td>{{track.address}}</td>
+                    <td>{{track.lng }}</td>
+                    <td>{{track.lat}}</td>
+                    <td>{{track.azim}}</td>
+                    <td>{{track.dateTime.toLocaleDateString()}} : {{track.dateTime.toLocaleTimeString()}}</td>
+                    <td> 
+                      <input type="checkbox" class="form-check-input" title="Показувати на карті" 
+                        [(ngModel)]="track.shouldBeTracked" (change)="toggleTracking(track)" />
+                    </td>
                   </tr>
 
               </table>

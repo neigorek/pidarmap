@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { TrackingService } from 'src/app/services/tracking.service';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
 import { PersonShortDto, TrackDto } from 'src/app/models/dtos';
+
 @Component({
   selector: 'app-main-dots',
   templateUrl: './main-dots.component.html',
@@ -26,7 +27,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
 
   @Input() resetPage: EventEmitter<string>;
 
-  constructor(private trackingServics: TrackingService) { }
+  constructor(private trackingService: TrackingService) { }
 
   ngOnInit(): void {
     this.loadAndSetPersones().subscribe();
@@ -42,6 +43,12 @@ export class MainDotsComponent implements OnInit, OnDestroy {
     });
   }
 
+  toggleTracking(track: TrackDto): void {
+    this.trackingService
+      .togglePersonTracking(track.id, track.shouldBeTracked)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe();
+  }
 
   onPersonSelected(person: PersonShortDto): void {
     if (this.person) {
@@ -71,11 +78,12 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       lng: this.lngField.nativeElement.value,
       azim: this.azimField.nativeElement.value,
       dateTime: new Date(),
+      shouldBeTracked: true,
       id: ''
     };
 
-    this.trackingServics
-      .addTrack(newTrack)
+    this.trackingService
+      .addTrack(newTrack, this.person.id)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetTracks(this.person.id))
@@ -86,22 +94,6 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       });
   }
 
-
-  onTrackDeleted(track: TrackDto) {
-    const result = confirm(`Видалити трек: ${track.address} | ${track.lat} ${track.lat} ${track.azim}?`);
-    if (!result) {
-      return;
-    }
-
-    this.trackingServics
-      .deleteTrack(track.id)
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        concatMap(() => this.loadAndSetTracks(this.person.id))
-      )
-      .subscribe();
-  }
- 
 
   onPersonNameModalToOpen(person: PersonShortDto): void {
     this.personNameField.nativeElement.value = person.name;
@@ -119,7 +111,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.trackingServics
+    this.trackingService
       .updatePersoneName(this.person.id, this.personNameField.nativeElement.value)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -135,7 +127,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
 
 
   private loadAndSetTracks(personId: string): Observable<void> {
-    return this.trackingServics
+    return this.trackingService
       .getTracks(personId)
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -146,7 +138,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
   }
 
   private loadAndSetPersones(): Observable<void> {
-    return this.trackingServics
+    return this.trackingService
       .getShortPersones()
       .pipe(
         takeUntil(this.unsubscribe$),

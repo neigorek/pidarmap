@@ -52,11 +52,31 @@ export class GroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleTracking(person: PersonDto){
+  toggleGroupTracking(group: GroupDto) {
+    this.trackingService
+      .togglePersonTracking(group.id, group.shouldBeTracked)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe();
+
+      console.log(group);
+    if (group == this.group) {
+      this.person = null;
+      this.persones = null;
+      this.loadAndSetPersones(this.group.id).subscribe();
+    }
+  }
+
+  togglePersonTracking(person: PersonDto){
     this.trackingService
       .togglePersonTracking(person.id, person.shouldBeTracked)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe();
+
+      if (person == this.person) {
+        this.person = null;
+        this.persones = null;
+        this.loadAndSetPersones(this.group.id).subscribe();
+      }
   }
  
   onPersonToAdd(shouldAdd: boolean) {
@@ -72,7 +92,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
     };
 
     this.trackingService
-      .addPerson(newPerson)
+      .addPerson(newPerson, this.group.id)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetPersones(this.group.id))
@@ -93,6 +113,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
     const newGroup: GroupDto = {
       name: this.addGroupNameField.nativeElement.value,
       description: this.addGroupDescriptionField.nativeElement.value,
+      shouldBeTracked: true,
       id: ''
     };
 
@@ -109,21 +130,6 @@ export class GroupsComponent implements OnInit, OnDestroy {
         this.person = null;
         this.persones = null;
       });
-  }
-
-  onPersonDeleted(person: PersonDto) {
-    const result = confirm(`Видалити особу: ${person.name}?`);
-    if (!result) {
-      return;
-    }
-
-    this.trackingService
-      .deletePerson(person.id)
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        concatMap(() => this.loadAndSetPersones(this.group.id))
-      )
-      .subscribe(() => this.person = null);
   }
 
   onPersonSelected(person: PersonDto): void {
@@ -180,25 +186,6 @@ export class GroupsComponent implements OnInit, OnDestroy {
     this.loadAndSetPersones(this.group.id).subscribe();
   }
 
-  onGroupDeleted(group: GroupDto) {
-    const result = confirm(`Видалити групу ${group.name}?`);
-    if (!result) {
-      return;
-    }
-
-    this.trackingService
-      .deleteGroup(group.id)
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        concatMap(() => this.loadAndSetGroups())
-      )
-      .subscribe(() => {
-        this.group = null;
-        this.persones = null;
-        this.person = null;
-      });
-  }
-
   onGroupModalToOpen(group: GroupDto): void {
     this.editGroupNameField.nativeElement.value = group.name;
     this.editGroupDescriptionField.nativeElement.value = group.description;
@@ -213,8 +200,9 @@ export class GroupsComponent implements OnInit, OnDestroy {
     const groupWithNewNameAndDescription: GroupDto = {
       id: this.group.id,
       name: this.editGroupNameField.nativeElement.value,
-      description: this.editGroupDescriptionField.nativeElement.value
-    }
+      description: this.editGroupDescriptionField.nativeElement.value,
+      shouldBeTracked: this.group.shouldBeTracked
+    };
 
     this.trackingService
       .updateGroupNameAndDescription(groupWithNewNameAndDescription)

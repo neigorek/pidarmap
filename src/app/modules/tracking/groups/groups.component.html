@@ -17,11 +17,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let selectedGroup of groups; let i = index;" [ngClass]="{'table-active' : selectedGroup.id == group?.id }">
+                    <tr *ngFor="let selectedGroup of groups; let i = index;" class="pointer" [ngClass]="{'table-active' : selectedGroup.id == group?.id }">
                         <th (click)="onGroupSelected(selectedGroup)">{{i}}</th>
                         <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.name}}</td>
                         <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.description}}</td>
-                        <td class="pointer" (click)="onGroupDeleted(selectedGroup)"> - </td>
+                        <td> 
+                            <input type="checkbox" class="form-check-input" title="Показувати на карті" 
+                                [(ngModel)]="selectedGroup.shouldBeTracked" (change)="toggleGroupTracking(selectedGroup)" />
+                        </td>
                     </tr>
             </table>
         </div>
@@ -39,20 +42,18 @@
                         <th scope="col">#</th>
                         <th scope="col">Ім'я</th>
                         <th scope="col">Опис</th>
-                        <th scope="col"></th>
                         <th scope="col" class="pointer" data-bs-toggle="modal" data-bs-target="#addPersonModal">+</th> 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let selectedPerson of persones; let i = index;" [ngClass]="{'table-active' : selectedPerson.id == person?.id }" >
+                    <tr *ngFor="let selectedPerson of persones; let i = index;" class="pointer" [ngClass]="{'table-active' : selectedPerson.id == person?.id }" >
                         <th (click)="onPersonSelected(selectedPerson)">{{i}}</th>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.name}}</td>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.description}}</td>
                         <td> 
                             <input type="checkbox" class="form-check-input" title="Показувати на карті" 
-                                [(ngModel)]="selectedPerson.shouldBeTracked" (change)="toggleTracking(selectedPerson)" />
+                                [(ngModel)]="selectedPerson.shouldBeTracked" (change)="togglePersonTracking(selectedPerson)" />
                         </td>
-                        <td class="pointer" (click)="onPersonDeleted(selectedPerson)" > - </td>
                     </tr>
             </table>
         </div>

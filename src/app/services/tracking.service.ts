@@ -4,7 +4,6 @@ import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
 import { GroupDto, PersonDto, PersonShortDto, TrackDto } from '../models/dtos';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -32,19 +31,19 @@ export class TrackingService {
   ]
 
   private tracks: TrackDto[] = [
-     {id: "1", address: "У сраці одного росіянського президента", azim: 100, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "2", address: "В сирій земельці", azim: 400, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "3", address: "В Києвському морі", azim: 150, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "4", address: "На узбережжі азовського моря", azim: 200, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) },
-     {id: "5", address: "На дні Чорного моря біля острова Зміїний", azim: 300, lat: 10.296032, lng: 70.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11) }
+     {id: "1", address: "У сраці одного росіянського президента", azim: 100, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11), shouldBeTracked: true },
+     {id: "2", address: "В сирій земельці", azim: 400, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11), shouldBeTracked: true },
+     {id: "3", address: "В Києвському морі", azim: 150, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11), shouldBeTracked: false },
+     {id: "4", address: "На узбережжі азовського моря", azim: 200, lat: 50.296032, lng: 50.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11), shouldBeTracked: false },
+     {id: "5", address: "На дні Чорного моря біля острова Зміїний", azim: 300, lat: 10.296032, lng: 70.296032, dateTime: new Date(2022, 2, 20, 17, 23, 42, 11), shouldBeTracked: false }
   ]
   
   private groups: GroupDto[] = [
-    {id: "1", name: "Група Кадирова", description: "Чеченські уйобки, що палко прагнуть удобрити чорнозем."},
-    {id: "2", name: "Морська піхота під Одесою", description: "Кримнашисти, що от-от збунтуються." },
-    {id: "3", name: "Механізована група біля Сумм", description: "Бригада ВСР. Кандидати на здачу металолома."},
-    {id: "4", name: "Десант під Гостомелем", description: "'Елітна' вертолітна ударна група. З підрізаними крильцями."},
-    {id: "5", name: "Ракетна батарея над Харковом", description: "Штабні щури, що обстрілють цивільне населення з за кордона."}
+    {id: "1", name: "Група Кадирова", description: "Чеченські уйобки, що палко прагнуть удобрити чорнозем.", shouldBeTracked: true},
+    {id: "2", name: "Морська піхота під Одесою", description: "Кримнашисти, що от-от збунтуються.", shouldBeTracked: true },
+    {id: "3", name: "Механізована група біля Сумм", description: "Бригада ВСР. Кандидати на здачу металолома.", shouldBeTracked: false},
+    {id: "4", name: "Десант під Гостомелем", description: "'Елітна' вертолітна ударна група. З підрізаними крильцями.", shouldBeTracked: false},
+    {id: "5", name: "Ракетна батарея над Харковом", description: "Штабні щури, що обстрілють цивільне населення з за кордона.", shouldBeTracked: true}
   ]
   constructor(
     private http: HttpClient) { }
@@ -71,22 +70,13 @@ export class TrackingService {
       return of<TrackDto[]>(this.tracks)
     }
 
-    deleteTrack(trackId: string): Observable<any> {
-
-      return of<boolean>(true);
-    }
-
-    deletePerson(personId: string): Observable<any> {
-
-      return of<boolean>(true);
-    }
-
     deleteGroup(groupId: string): Observable<any> {
 
       return of<boolean>(true);
     }
 
-    addTrack(track: TrackDto): Observable<any> {
+
+    addTrack(track: TrackDto, personId: string): Observable<any> {
 
       return of<boolean>(true);
     }
@@ -96,7 +86,7 @@ export class TrackingService {
       return of<boolean>(true);
     }
 
-    addPerson(person: PersonDto): Observable<any> {
+    addPerson(person: PersonDto, groupId: string): Observable<any> {
       
       return of<boolean>(true);
     }
@@ -116,7 +106,17 @@ export class TrackingService {
       return of<boolean>(true);
     }
 
+    toggleGroupTracking(groupId: string, hide: boolean): Observable<any> {
+      
+      return of<boolean>(true);
+    }
+
     togglePersonTracking(personId: string, hide: boolean): Observable<any> {
+      
+      return of<boolean>(true);
+    }
+
+    toggleTrackTracking(trackId: string, hide: boolean): Observable<any> {
       
       return of<boolean>(true);
     }
