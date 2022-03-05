@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { TrackingService } from 'src/app/services/tracking.service';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
@@ -19,14 +19,27 @@ export class MainDotsComponent implements OnInit, OnDestroy {
   @ViewChild('lngField', { static: false }) lngField: ElementRef;
   @ViewChild('latField', { static: false }) latField: ElementRef;
   @ViewChild('azimField', { static: false }) azimField: ElementRef;
+
   @ViewChild('dismissButtonForAddTrackModal', { static: false }) dismissButtonForAddTrackModal: ElementRef;
   @ViewChild('personNameField', { static: false }) personNameField: ElementRef;
   @ViewChild('dismissButtonForChangeNameModal', { static: false }) dismissButtonForChangeNameModal: ElementRef;
+
+  @Input() resetPage: EventEmitter<string>;
 
   constructor(private trackingServics: TrackingService) { }
 
   ngOnInit(): void {
     this.loadAndSetPersones().subscribe();
+    this.resetPage.subscribe((pageName: string) => {
+      if (pageName != "mainDots") {
+        return;
+      }
+
+      this.persones = null;
+      this.person = null;
+      this.tracks = null;
+      this.loadAndSetPersones().subscribe();
+    });
   }
 
 

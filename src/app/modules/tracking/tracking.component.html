@@ -1,15 +1,15 @@
   <nav class="mt-2 mb-2">
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <button class="nav-link active" id="nav-dots-tab" data-bs-toggle="tab" data-bs-target="#nav-dots" type="button" role="tab" aria-controls="nav-dots" aria-selected="true">Основні точки</button>
-      <button class="nav-link" id="nav-groups-tab" data-bs-toggle="tab" data-bs-target="#nav-groups" type="button" role="tab" aria-controls="nav-groups" aria-selected="false">Групи</button>
+      <button class="nav-link active" id="nav-dots-tab" data-bs-toggle="tab" data-bs-target="#nav-dots" type="button" role="tab" aria-controls="nav-dots" aria-selected="true" (click)="tabClick('mainDots')">Основні точки</button>
+      <button class="nav-link" id="nav-groups-tab" data-bs-toggle="tab" data-bs-target="#nav-groups" type="button" role="tab" aria-controls="nav-groups" aria-selected="false" (click)="tabClick('groups')">Групи</button>
     </div>
   </nav>
   <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-dots" role="tabpanel" aria-labelledby="nav-dots-tab">
-      <app-main-dots ></app-main-dots>
+      <app-main-dots [resetPage]="resetTab$"></app-main-dots>
     </div>
     <div class="tab-pane fade" id="nav-groups" role="tabpanel" aria-labelledby="nav-groups-tab">
-      <app-groups></app-groups>
+      <app-groups [resetPage]="resetTab$"></app-groups>
     </div>
   </div>
 

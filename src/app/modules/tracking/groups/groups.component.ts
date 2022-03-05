@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
 import { GroupDto, PersonDto } from 'src/app/models/dtos';
@@ -33,10 +33,23 @@ export class GroupsComponent implements OnInit, OnDestroy {
   persones: PersonDto[];
   person: PersonDto;
 
+  @Input() resetPage: EventEmitter<string>;
+
   constructor(private trackingService: TrackingService) { }
 
   ngOnInit(): void {
     this.loadAndSetGroups().subscribe();
+    this.resetPage.subscribe((pageName: string) => {
+      if (pageName != "groups") {
+        return;
+      }
+
+      this.groups = null;
+      this.group = null;
+      this.persones = null;
+      this.person = null;
+      this.loadAndSetGroups().subscribe();
+    });
   }
 
   toggleTracking(person: PersonDto){
