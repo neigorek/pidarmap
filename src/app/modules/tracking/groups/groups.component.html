@@ -4,8 +4,8 @@
             <div *ngIf="groups" class="table-header">
                 <h6>Групи</h6>
                 <div class="form-check form-switch">
-                    <input #groupToggler class="form-check-input" type="checkbox" role="switch" id="activeGroupsOnly" (change)="toggleActiveGroups()" >
-                    <label class="form-check-label" for="activeGroupsOnly">Лише активні</label>
+                    <input #groupToggler class="form-check-input pointer" type="checkbox" role="switch" id="activeGroupsOnly" (change)="toggleActiveGroups()" >
+                    <label class="form-check-label pointer" for="activeGroupsOnly">Лише активні</label>
                 </div>
                 <h6 *ngIf="group"> '{{group.name}}' </h6>
                 <i *ngIf="group" class="fas fa-pen pointer"  data-bs-toggle="modal" data-bs-target="#editGroupName" (click)="onGroupModalToOpen(group)" ></i>
@@ -26,7 +26,7 @@
                         <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.name}}</td>
                         <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.description}}</td>
                         <td> 
-                            <input type="checkbox" class="form-check-input" title="Активна" 
+                            <input type="checkbox" class="form-check-input pointer" title="Активна" 
                                 [(ngModel)]="selectedGroup.shouldBeTracked" (change)="toggleGroupTracking(selectedGroup)" />
                         </td>
                     </tr>
@@ -37,8 +37,8 @@
             <div *ngIf="persones" class="table-header">
                 <h6>Особи</h6>
                 <div class="form-check form-switch">
-                    <input #personToggler class="form-check-input" type="checkbox" role="switch" id="activePersonesOnly" (change)="toggleActivePersons()" >
-                    <label class="form-check-label" for="activePersonesOnly">Лише активні</label>
+                    <input #personToggler class="form-check-input pointer" type="checkbox" role="switch" id="activePersonesOnly" (change)="toggleActivePersons()" >
+                    <label class="form-check-label pointer" for="activePersonesOnly">Лише активні</label>
                 </div>
                 <h6 *ngIf="person"> '{{person.name}}' </h6>
                 <i *ngIf="person" class="fas fa-pen pointer"  data-bs-toggle="modal" data-bs-target="#editPersonNameFromGroupPage" (click)="onPersonChangeDescriptionModalToOpen(person)" ></i>
@@ -59,7 +59,7 @@
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.name}}</td>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.description}}</td>
                         <td> 
-                            <input type="checkbox" class="form-check-input" title="Активна" 
+                            <input type="checkbox" class="form-check-input pointer" title="Активна" 
                                 [(ngModel)]="selectedPerson.shouldBeTracked" (change)="togglePersonTracking(selectedPerson)" />
                         </td>
                     </tr>

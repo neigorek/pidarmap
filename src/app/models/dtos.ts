@@ -1,6 +1,7 @@
 export interface PersonShortDto {
     id: string;
     name: string;
+    groupId: string;
 }
 
 export interface TrackDto {
@@ -18,7 +19,6 @@ export interface GroupDto {
     name: string;
     description: string;
     shouldBeTracked: boolean;
-    // todo: add filtration by isActive
 }
 
 export interface PersonDto {
@@ -26,4 +26,5 @@ export interface PersonDto {
     name: string;
     description: string;
     shouldBeTracked: boolean;
+    groupId: string;
 }

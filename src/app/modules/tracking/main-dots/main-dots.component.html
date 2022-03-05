@@ -27,8 +27,8 @@
             <div *ngIf="tracks && person" class="table-header">
                 <h6>Треки</h6>
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="activeOnly" (change)="toggleActiveTracks()" >
-                  <label class="form-check-label" for="activeOnly">Лише активні</label>
+                  <input class="form-check-input pointer" type="checkbox" role="switch" id="activeOnly" (change)="toggleActiveTracks()" >
+                  <label class="form-check-label pointer" for="activeOnly">Лише активні</label>
                 </div>
             </div>
             <table *ngIf="tracks && person" class="table table-striped align-middle">
@@ -45,7 +45,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let track of tracks; let i = index;" class="pointer" (click)="onTrackSelected(track)">
+                  <tr *ngFor="let track of tracks; let i = index;" (click)="onTrackSelected(track)">
                     <th scope="row" >{{i + 1}}</th>
                     <th>{{track.id}}</th>
                     <td>{{track.address}}</td>
@@ -53,8 +53,8 @@
                     <td>{{track.lat}}</td>
                     <td>{{track.azim}}</td>
                     <td>{{track.dateTime.toLocaleDateString()}} : {{track.dateTime.toLocaleTimeString()}}</td>
-                    <td> 
-                      <input type="checkbox" class="form-check-input" title="Активна" 
+                    <td class="pointer"> 
+                      <input type="checkbox" class="form-check-input pointer" title="Активна" 
                         [(ngModel)]="track.shouldBeTracked" (change)="toggleTracking(track)" />
                     </td>
                   </tr>

@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, Event
 import { Observable, Subject } from 'rxjs';
 import { TrackingService } from 'src/app/services/tracking.service';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
-import { PersonShortDto, TrackDto } from 'src/app/models/dtos';
+import { PersonDto, PersonShortDto, TrackDto } from 'src/app/models/dtos';
 
 @Component({
   selector: 'app-main-dots',
@@ -139,8 +139,13 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const personWithNewName: PersonShortDto = {
+      id: this.person.id,
+      name: this.personNameField.nativeElement.value,
+      groupId: this.person.groupId
+    }
     this.trackingService
-      .updatePersoneName(this.person.id, this.personNameField.nativeElement.value)
+      .updatePersoneName(personWithNewName)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetPersones())

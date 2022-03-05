@@ -3,31 +3,33 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
 import { GroupDto, PersonDto, PersonShortDto, TrackDto } from '../models/dtos';
+import { catchError } from 'rxjs/internal/operators/catchError';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrackingService {
 
-  // private serverUrl: string = environment.serverUrl; todo: use it when environment would contain valid url
-
+  private get serverUrl(): string {
+    return environment.server_user;
+  } 
 
   private shourtPersones: PersonShortDto[] = [
-    {id: "1", name: "Кадиров" },
-    {id: "2", name: "Шойгу" },
-    {id: "3", name: "Стрєлков" },
-    {id: "4", name: "Коля" },
-    {id: "5", name: "Іван" },
-    {id: "6", name: "Пушилін" },
+    {id: "1", name: "Кадиров", groupId: "1"  },
+    {id: "2", name: "Шойгу", groupId: "1"  },
+    {id: "3", name: "Стрєлков", groupId: "1"  },
+    {id: "4", name: "Коля", groupId: "1"  },
+    {id: "5", name: "Іван", groupId: "1"  },
+    {id: "6", name: "Пушилін", groupId: "1"  }
   ]
 
   private persones: PersonDto[] = [
-    {id: "1", name: "Кадиров", shouldBeTracked: true, description: "Головна мавпа на чечні" },
-    {id: "2", name: "Шойгу", shouldBeTracked: true, description: "Путінський лакей" },
-    {id: "3", name: "Стрєлков", shouldBeTracked: true, description: "Новоросійський ряжаний генерал" },
-    {id: "4", name: "Коля", shouldBeTracked: false, description: "Личичинка Лукашенка" },
-    {id: "5", name: "Іван", shouldBeTracked: false, description: "Танцор русскага балєта" },
-    {id: "6", name: "Пушилін", shouldBeTracked: true, description: "Вождь войовничих шахтьорів" },
+    {id: "1", name: "Кадиров", shouldBeTracked: true, description: "Головна мавпа на чечні", groupId: "1" },
+    {id: "2", name: "Шойгу", shouldBeTracked: true, description: "Путінський лакей", groupId: "1" },
+    {id: "3", name: "Стрєлков", shouldBeTracked: true, description: "Новоросійський ряжаний генерал", groupId: "1" },
+    {id: "4", name: "Коля", shouldBeTracked: false, description: "Личичинка Лукашенка", groupId: "1" },
+    {id: "5", name: "Іван", shouldBeTracked: false, description: "Танцор русскага балєта", groupId: "1" },
+    {id: "6", name: "Пушилін", shouldBeTracked: true, description: "Вождь войовничих шахтьорів", groupId: "1" }
   ]
 
   private tracks: TrackDto[] = [
@@ -45,40 +47,67 @@ export class TrackingService {
     {id: "4", name: "Десант під Гостомелем", description: "'Елітна' вертолітна ударна група. З підрізаними крильцями.", shouldBeTracked: false},
     {id: "5", name: "Ракетна батарея над Харковом", description: "Штабні щури, що обстрілють цивільне населення з за кордона.", shouldBeTracked: true}
   ]
-  constructor(
-    private http: HttpClient) { }
 
+  constructor(private http: HttpClient) { }
+
+    // ---- short persones START
 
     getShortPersones(): Observable<PersonShortDto[]> {
+      // if (!environment.production) {
+        return of<PersonShortDto[]>(this.shourtPersones)
+      // } 
 
-      return of<PersonShortDto[]>(this.shourtPersones)
+      // const url = this.serverUrl + "/monkeys/active/";
+      // return this.http
+      //   .get<PersonShortDto[]>(url)
+      //   .pipe(catchError((response, obs) => { console.error(response); return obs;} ));
     } 
 
-    getPersones(groupId: string): Observable<PersonDto[]> {
 
-      return of<PersonDto[]>(this.persones)
-    } 
+    updatePersoneName(person: PersonShortDto) : Observable<any> {
+      // if (!environment.production) {
+        return of<boolean>(true);
+      // }
 
-    getGroups(): Observable<GroupDto[]> {
-
-      return of<GroupDto[]>(this.groups)
+      // const url = this.serverUrl +  "/monkeys/change_status/";
+      // return this.http
+      //   .put<any>(url, {data: person})
+      //   .pipe(catchError((response, obs) => { console.error(response); return obs;} ));
     }
 
-  
+    // ---- short persones END
+
+
+
+
+
+    // ---- tracks START
+
     getTracks(personId: string): Observable<TrackDto[]> {
 
       return of<TrackDto[]>(this.tracks)
     }
 
-    deleteGroup(groupId: string): Observable<any> {
+    addTrack(track: TrackDto, personId: string): Observable<any> {
 
       return of<boolean>(true);
     }
 
-
-    addTrack(track: TrackDto, personId: string): Observable<any> {
-
+    toggleTrackTracking(trackId: string, hide: boolean): Observable<any> {
+      
       return of<boolean>(true);
+    }
+
+    // ---- tracks END
+
+
+
+
+    // ---- groups START
+
+    getGroups(): Observable<GroupDto[]> {
+
+      return of<GroupDto[]>(this.groups)
     }
 
     addGroup(group: GroupDto): Observable<any> {
@@ -86,22 +115,7 @@ export class TrackingService {
       return of<boolean>(true);
     }
 
-    addPerson(person: PersonDto, groupId: string): Observable<any> {
-      
-      return of<boolean>(true);
-    }
-
-    updatePersoneName(pesoneId: string, newName: string) : Observable<any> {
-
-      return of<boolean>(true);
-    }
-
     updateGroupNameAndDescription(group: GroupDto): Observable<any> {
-
-      return of<boolean>(true);
-    }
-
-    updateNameNameAndDescription(person: PersonDto): Observable<any> {
 
       return of<boolean>(true);
     }
@@ -111,17 +125,33 @@ export class TrackingService {
       return of<boolean>(true);
     }
 
+    // ---- groups END
+
+
+
+
+
+    // ---- persones START
+
+    getPersones(groupId: string): Observable<PersonDto[]> {
+
+      return of<PersonDto[]>(this.persones)
+    } 
+
+    addPerson(person: PersonDto, groupId: string): Observable<any> {
+      
+      return of<boolean>(true);
+    }
+
+    updatePersonNameAndDescription(person: PersonDto): Observable<any> {
+
+      return of<boolean>(true);
+    }
+
     togglePersonTracking(personId: string, hide: boolean): Observable<any> {
       
       return of<boolean>(true);
     }
 
-    toggleTrackTracking(trackId: string, hide: boolean): Observable<any> {
-      
-      return of<boolean>(true);
-    }
-
-
-
-
+    // ---- persones END
 }

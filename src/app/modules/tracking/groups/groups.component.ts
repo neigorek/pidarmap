@@ -81,7 +81,9 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
   toggleActiveGroups(): void {
     this.showActiveGroupsOnly = !this.showActiveGroupsOnly;
-    this.personToggler.nativeElement.checked = false;
+    if (this.personToggler) {
+      this.personToggler.nativeElement.checked = false;
+    }
     this.showActivePersonesOnly = false;
     this.group = null;
     this.person = null;
@@ -144,7 +146,8 @@ export class GroupsComponent implements OnInit, OnDestroy {
       name: this.addPersonNameField.nativeElement.value,
       description: this.addPersonDescriptionField.nativeElement.value,
       id: '',
-      shouldBeTracked: true
+      shouldBeTracked: true,
+      groupId: this.group.id
     };
 
     this.trackingService
@@ -213,11 +216,12 @@ export class GroupsComponent implements OnInit, OnDestroy {
       id: this.person.id,
       name: this.editPersonNameFromGroupPageField.nativeElement.value,
       description: this.editPersonDescriptionFromGroupPageField.nativeElement.value,
-      shouldBeTracked: this.person.shouldBeTracked
+      shouldBeTracked: this.person.shouldBeTracked,
+      groupId: this.group.id
     }
 
     this.trackingService
-      .updateNameNameAndDescription(personWithNewNameAndDescription)
+      .updatePersonNameAndDescription(personWithNewNameAndDescription)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetPersones(this.group.id))
@@ -227,7 +231,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
         this.resetChangePersonModalFields();
         this.person = null;
       });
-
+// todo: add validation on track
   }
 
   onGroupSelected(group: GroupDto): void {
