@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { TrackingService } from 'src/app/services/tracking.service';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
@@ -15,6 +15,9 @@ export class MainDotsComponent implements OnInit, OnDestroy {
   persones: PersonShortDto[];
   person: PersonShortDto;
   tracks: TrackDto[];
+  tempTracks: TrackDto[];
+
+  showActiveOnly: boolean = false;
 
   @ViewChild('addressField', { static: false }) addressField: ElementRef;
   @ViewChild('lngField', { static: false }) lngField: ElementRef;
@@ -25,9 +28,12 @@ export class MainDotsComponent implements OnInit, OnDestroy {
   @ViewChild('personNameField', { static: false }) personNameField: ElementRef;
   @ViewChild('dismissButtonForChangeNameModal', { static: false }) dismissButtonForChangeNameModal: ElementRef;
 
+  @ViewChildren('tracksTogglers') groupsTogglers: QueryList<ElementRef>;
+  
   @Input() resetPage: EventEmitter<string>;
 
-  constructor(private trackingService: TrackingService) { }
+  constructor(
+    private trackingService: TrackingService) { }
 
   ngOnInit(): void {
     this.loadAndSetPersones().subscribe();
@@ -39,15 +45,36 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       this.persones = null;
       this.person = null;
       this.tracks = null;
+      this.tempTracks = null;
+      this.showActiveOnly = false;
+ 
       this.loadAndSetPersones().subscribe();
     });
+  }
+
+  toggleActiveTracks() {
+    this.showActiveOnly = !this.showActiveOnly;
+
+    if (this.showActiveOnly) {
+      this.tempTracks = [...this.tracks];
+      this.tracks = this.tracks.filter(t => t.shouldBeTracked);
+    } else {
+      this.tracks = [...this.tempTracks];
+      this.tempTracks = null;
+    }
   }
 
   toggleTracking(track: TrackDto): void {
     this.trackingService
       .togglePersonTracking(track.id, track.shouldBeTracked)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe();
+      .subscribe(() => {
+        if (this.showActiveOnly) {
+          this.tracks = this.tracks.filter(t => t.shouldBeTracked);
+        }
+      });
+
+
   }
 
   onPersonSelected(person: PersonShortDto): void {
@@ -55,6 +82,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       if (this.person.id == person.id) {
         this.person = null;
         this.tracks = null;
+        this.tempTracks = null;
         return;
       }
     }
@@ -133,6 +161,13 @@ export class MainDotsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         map((trackResponse: TrackDto[]) => { 
           this.tracks = trackResponse;
+          this.tempTracks = null;
+
+          if (this.showActiveOnly) {
+            this.tempTracks = [...this.tracks];
+            this.tracks = this.tracks.filter(t => t.shouldBeTracked);
+          }
+
         })
       );
   }

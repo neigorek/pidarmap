@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
 import { GroupDto, PersonDto } from 'src/app/models/dtos';
@@ -28,10 +28,19 @@ export class GroupsComponent implements OnInit, OnDestroy {
   @ViewChild('addPersonDescriptionField', { static: false }) addPersonDescriptionField: ElementRef;
   @ViewChild('dismissButtonForNewPersonModal', { static: false }) dismissButtonForNewPersonModal: ElementRef;
 
+  @ViewChild('groupToggler', { static: false }) groupToggler: ElementRef;
+  @ViewChild('personToggler', { static: false }) personToggler: ElementRef;
+
   groups: GroupDto[];
   group: GroupDto;
   persones: PersonDto[];
   person: PersonDto;
+
+  tempPersones: PersonDto[];
+  tempGroups: GroupDto[];
+
+  showActiveGroupsOnly: boolean = false;
+  showActivePersonesOnly: boolean = false;
 
   @Input() resetPage: EventEmitter<string>;
 
@@ -44,42 +53,89 @@ export class GroupsComponent implements OnInit, OnDestroy {
         return;
       }
 
+      this.groupToggler.nativeElement.checked = false;
       this.groups = null;
       this.group = null;
       this.persones = null;
       this.person = null;
+      this.tempPersones = null;
+      this.tempGroups = null;
+      this.showActiveGroupsOnly = false;
+      this.showActivePersonesOnly = false;
       this.loadAndSetGroups().subscribe();
     });
   }
 
-  toggleGroupTracking(group: GroupDto) {
-    this.trackingService
-      .togglePersonTracking(group.id, group.shouldBeTracked)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe();
+  toggleActivePersons(): void {
+    this.showActivePersonesOnly = !this.showActivePersonesOnly;
+    this.person = null;
 
-      console.log(group);
-    if (group == this.group) {
-      this.person = null;
-      this.persones = null;
-      this.loadAndSetPersones(this.group.id).subscribe();
+    if (this.showActivePersonesOnly) {
+      this.tempPersones = [...this.persones];
+      this.persones = this.persones.filter(t => t.shouldBeTracked);
+    } else {
+      this.persones = [...this.tempPersones];
+      this.tempPersones = null;
     }
   }
 
-  togglePersonTracking(person: PersonDto){
+  toggleActiveGroups(): void {
+    this.showActiveGroupsOnly = !this.showActiveGroupsOnly;
+    this.personToggler.nativeElement.checked = false;
+    this.showActivePersonesOnly = false;
+    this.group = null;
+    this.person = null;
+    this.persones = null;
+    this.tempPersones = null;
+
+    if (this.showActiveGroupsOnly) {
+      this.tempGroups = [...this.groups];
+      this.groups = this.groups.filter(t => t.shouldBeTracked);
+    } else {
+      this.groups = [...this.tempGroups];
+      this.tempGroups = null;
+    }
+  }
+
+  toggleGroupTracking(group: GroupDto): void {
+    this.trackingService
+      .togglePersonTracking(group.id, group.shouldBeTracked)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        if (group == this.group) {
+          this.person = null;
+          this.persones = null;
+          this.tempPersones = null;
+          this.loadAndSetPersones(this.group.id).subscribe();
+        }
+
+        if (this.showActiveGroupsOnly) {
+          this.groups = this.tempGroups.filter(t => t.shouldBeTracked);
+        }
+
+      });
+
+  }
+
+  togglePersonTracking(person: PersonDto): void {
     this.trackingService
       .togglePersonTracking(person.id, person.shouldBeTracked)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe();
+      .subscribe(() => {
+        if (person == this.person) {
+          this.person = null;
+          this.persones = null;
+          this.tempPersones = null
+          this.loadAndSetPersones(this.group.id).subscribe();
+        }
 
-      if (person == this.person) {
-        this.person = null;
-        this.persones = null;
-        this.loadAndSetPersones(this.group.id).subscribe();
-      }
+        if (this.showActivePersonesOnly) {
+          this.persones = this.tempPersones.filter(p => p.shouldBeTracked);
+        }
+      });
   }
  
-  onPersonToAdd(shouldAdd: boolean) {
+  onPersonToAdd(shouldAdd: boolean): void {
     if (!shouldAdd) {
       return;
     }
@@ -105,7 +161,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
   }
 
-  onGroupToAdd(shouldAdd: boolean) {
+  onGroupToAdd(shouldAdd: boolean): void {
     if (!shouldAdd) {
       return;
     }
@@ -129,6 +185,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
         this.group = null;
         this.person = null;
         this.persones = null;
+        this.tempPersones = null
       });
   }
 
@@ -216,6 +273,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
         this.group = null;
         this.person = null;
         this.persones = null;
+        this.tempPersones = null
       });
   }
 
@@ -228,6 +286,12 @@ export class GroupsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         map((groupsResponse: GroupDto[]) => { 
           this.groups = groupsResponse;
+          this.tempGroups = null;
+
+          if (this.showActiveGroupsOnly) {
+            this.tempGroups = [...this.groups];
+            this.groups = this.groups.filter(t => t.shouldBeTracked);
+          }
         })
       );
   }
@@ -239,6 +303,12 @@ export class GroupsComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         map((personesResponse: PersonDto[]) => { 
           this.persones = personesResponse;
+          this.tempPersones = null;
+
+          if (this.showActivePersonesOnly) {
+            this.tempPersones = [...this.persones];
+            this.persones = this.persones.filter(p => p.shouldBeTracked);
+          }
         })
       );
   }

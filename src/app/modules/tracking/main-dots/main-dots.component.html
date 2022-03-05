@@ -17,7 +17,7 @@
                 <tbody>
                     <tr *ngFor="let selectedPerson of persones; let i = index;" class="pointer" 
                         [ngClass]="{'table-active' : selectedPerson.id == person?.id }" (click)="onPersonSelected(selectedPerson)">
-                        <th>{{i}}</th>
+                        <th>{{i + 1}}</th>
                         <td>{{selectedPerson.name}}</td>
                     </tr>
             </table>
@@ -25,7 +25,11 @@
 
         <div class="col-9">
             <div *ngIf="tracks && person" class="table-header">
-                <h6>Трек</h6>
+                <h6>Треки</h6>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="activeOnly" (change)="toggleActiveTracks()" >
+                  <label class="form-check-label" for="activeOnly">Лише активні</label>
+                </div>
             </div>
             <table *ngIf="tracks && person" class="table table-striped align-middle">
                 <thead>
@@ -42,7 +46,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let track of tracks; let i = index;" class="pointer" (click)="onTrackSelected(track)">
-                    <th scope="row" >{{i}}</th>
+                    <th scope="row" >{{i + 1}}</th>
                     <th>{{track.id}}</th>
                     <td>{{track.address}}</td>
                     <td>{{track.lng }}</td>
@@ -50,7 +54,7 @@
                     <td>{{track.azim}}</td>
                     <td>{{track.dateTime.toLocaleDateString()}} : {{track.dateTime.toLocaleTimeString()}}</td>
                     <td> 
-                      <input type="checkbox" class="form-check-input" title="Показувати на карті" 
+                      <input type="checkbox" class="form-check-input" title="Активна" 
                         [(ngModel)]="track.shouldBeTracked" (change)="toggleTracking(track)" />
                     </td>
                   </tr>
