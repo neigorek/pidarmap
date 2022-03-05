@@ -3,6 +3,10 @@
         <div class="col-6">
             <div *ngIf="groups" class="table-header">
                 <h6>Групи</h6>
+                <div class="form-check form-switch">
+                    <input #groupToggler class="form-check-input pointer" type="checkbox" role="switch" id="activeGroupsOnly" (change)="toggleActiveGroups()" >
+                    <label class="form-check-label pointer" for="activeGroupsOnly">Лише активні</label>
+                </div>
                 <h6 *ngIf="group"> '{{group.name}}' </h6>
                 <svg *ngIf="group" class="pointer" data-bs-toggle="modal" data-bs-target="#editGroupName" (click)="onGroupModalToOpen(group)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
@@ -19,11 +23,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let selectedGroup of groups; let i = index;" [ngClass]="{'table-active' : selectedGroup.id == group?.id }">
-                        <th (click)="onGroupSelected(selectedGroup)">{{i}}</th>
+                    <tr *ngFor="let selectedGroup of groups; let i = index;" class="pointer" [ngClass]="{'table-active' : selectedGroup.id == group?.id }">
+                        <th (click)="onGroupSelected(selectedGroup)">{{i + 1}}</th>
                         <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.name}}</td>
                         <td (click)="onGroupSelected(selectedGroup)">{{selectedGroup.description}}</td>
-                        <td class="pointer" (click)="onGroupDeleted(selectedGroup)"> - </td>
+                        <td> 
+                            <input type="checkbox" class="form-check-input pointer" title="Активна" 
+                                [(ngModel)]="selectedGroup.shouldBeTracked" (change)="toggleGroupTracking(selectedGroup)" />
+                        </td>
                     </tr>
             </table>
         </div>
@@ -31,6 +38,10 @@
         <div class="col-6">
             <div *ngIf="persones" class="table-header">
                 <h6>Особи</h6>
+                <div class="form-check form-switch">
+                    <input #personToggler class="form-check-input pointer" type="checkbox" role="switch" id="activePersonesOnly" (change)="toggleActivePersons()" >
+                    <label class="form-check-label pointer" for="activePersonesOnly">Лише активні</label>
+                </div>
                 <h6 *ngIf="person"> '{{person.name}}' </h6>
                 <svg *ngIf="person" class="pointer"  data-bs-toggle="modal" data-bs-target="#editPersonNameFromGroupPage" (click)="onPersonChangeDescriptionModalToOpen(person)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                     <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
@@ -43,20 +54,18 @@
                         <th scope="col">#</th>
                         <th scope="col">Ім'я</th>
                         <th scope="col">Опис</th>
-                        <th scope="col"></th>
                         <th scope="col" class="pointer" data-bs-toggle="modal" data-bs-target="#addPersonModal">+</th> 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let selectedPerson of persones; let i = index;" [ngClass]="{'table-active' : selectedPerson.id == person?.id }" >
-                        <th (click)="onPersonSelected(selectedPerson)">{{i}}</th>
+                    <tr *ngFor="let selectedPerson of persones; let i = index;" class="pointer" [ngClass]="{'table-active' : selectedPerson.id == person?.id }" >
+                        <th (click)="onPersonSelected(selectedPerson)">{{i + 1}}</th>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.name}}</td>
                         <td (click)="onPersonSelected(selectedPerson)">{{selectedPerson.description}}</td>
                         <td> 
-                            <input type="checkbox" class="form-check-input" title="Показувати на карті" 
-                                [(ngModel)]="selectedPerson.shouldBeTracked" (change)="toggleTracking(selectedPerson)" />
+                            <input type="checkbox" class="form-check-input pointer" title="Активна" 
+                                [(ngModel)]="selectedPerson.shouldBeTracked" (change)="togglePersonTracking(selectedPerson)" />
                         </td>
-                        <td class="pointer" (click)="onPersonDeleted(selectedPerson)" > - </td>
                     </tr>
             </table>
         </div>

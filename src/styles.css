@@ -8,7 +8,7 @@
     display: flex;;
     margin-top: auto;
     margin-bottom: auto;
-    min-height: 2rem
+    min-height: 2rem;
 }
  
 .table-header h6 {
@@ -20,6 +20,12 @@
     display: flex;
     margin: auto 0;
 }
+
+.table-header .form-check {
+    min-height: unset !important;
+    margin: auto 0;
+    margin-right: .5rem;
+} 
 
 .input-custom-label {
     width: 100px;
