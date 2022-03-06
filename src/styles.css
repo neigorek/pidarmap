@@ -16,7 +16,7 @@
     margin-right: .5rem;
 } 
 
-.table-header i {
+.table-header svg {
     display: flex;
     margin: auto 0;
 }
