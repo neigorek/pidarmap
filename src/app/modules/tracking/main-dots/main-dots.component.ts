@@ -1,8 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { TrackingService } from 'src/app/services/tracking.service';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
-import { PersonDto, PersonShortDto, TrackDto } from 'src/app/models/dtos';
+import { PersonModel, TrackModel } from 'src/app/models/dtos';
 
 @Component({
   selector: 'app-main-dots',
@@ -12,10 +12,10 @@ import { PersonDto, PersonShortDto, TrackDto } from 'src/app/models/dtos';
 export class MainDotsComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
 
-  persones: PersonShortDto[];
-  person: PersonShortDto;
-  tracks: TrackDto[];
-  tempTracks: TrackDto[];
+  persones: PersonModel[];
+  person: PersonModel;
+  tracks: TrackModel[];
+  tempTracks: TrackModel[];
 
   showActiveOnly: boolean = false;
 
@@ -64,9 +64,9 @@ export class MainDotsComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleTracking(track: TrackDto): void {
+  toggleTracking(track: TrackModel): void {
     this.trackingService
-      .togglePersonTracking(track.id, track.shouldBeTracked)
+      .toggleTrackTracking(track)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         if (this.showActiveOnly) {
@@ -77,7 +77,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
 
   }
 
-  onPersonSelected(person: PersonShortDto): void {
+  onPersonSelected(person: PersonModel): void {
     if (this.person) {
       if (this.person.id == person.id) {
         this.person = null;
@@ -90,7 +90,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
     this.loadAndSetTracks(this.person.id).subscribe();
   }
 
-  onTrackSelected(track: TrackDto): void {
+  onTrackSelected(track: TrackModel): void {
     console.log(track);
   }
 
@@ -100,18 +100,18 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newTrack: TrackDto = {
+    const newTrack = {
       address: this.addressField.nativeElement.value,
       lat: this.latField.nativeElement.value,
       lng: this.lngField.nativeElement.value,
       azim: this.azimField.nativeElement.value,
       dateTime: new Date(),
       shouldBeTracked: true,
-      id: ''
-    };
+      personId: this.person.id
+    } as TrackModel;
 
     this.trackingService
-      .addTrack(newTrack, this.person.id)
+      .addTrack(newTrack)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetTracks(this.person.id))
@@ -123,7 +123,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
   }
 
 
-  onPersonNameModalToOpen(person: PersonShortDto): void {
+  onPersonNameModalToOpen(person: PersonModel): void {
     this.personNameField.nativeElement.value = person.name;
   }
 
@@ -139,13 +139,9 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const personWithNewName: PersonShortDto = {
-      id: this.person.id,
-      name: this.personNameField.nativeElement.value,
-      groupId: this.person.groupId
-    }
+    this.person.name = this.personNameField.nativeElement.value;
     this.trackingService
-      .updatePersoneName(personWithNewName)
+      .updatePersoneName(this.person)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetPersones())
@@ -164,7 +160,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       .getTracks(personId)
       .pipe(
         takeUntil(this.unsubscribe$),
-        map((trackResponse: TrackDto[]) => { 
+        map((trackResponse: TrackModel[]) => { 
           this.tracks = trackResponse;
           this.tempTracks = null;
 
@@ -182,7 +178,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
       .getShortPersones()
       .pipe(
         takeUntil(this.unsubscribe$),
-        map((personesResponse: PersonShortDto[]) => { 
+        map((personesResponse: PersonModel[]) => { 
           this.persones = personesResponse;
         })
       );

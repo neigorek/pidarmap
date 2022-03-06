@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
-import { GroupDto, PersonDto } from 'src/app/models/dtos';
+import { GroupModel, PersonModel } from 'src/app/models/dtos';
 import { TrackingService } from 'src/app/services/tracking.service';
 
 @Component({
@@ -31,13 +31,13 @@ export class GroupsComponent implements OnInit, OnDestroy {
   @ViewChild('groupToggler', { static: false }) groupToggler: ElementRef;
   @ViewChild('personToggler', { static: false }) personToggler: ElementRef;
 
-  groups: GroupDto[];
-  group: GroupDto;
-  persones: PersonDto[];
-  person: PersonDto;
+  groups: GroupModel[];
+  group: GroupModel;
+  persones: PersonModel[];
+  person: PersonModel;
 
-  tempPersones: PersonDto[];
-  tempGroups: GroupDto[];
+  tempPersones: PersonModel[];
+  tempGroups: GroupModel[];
 
   showActiveGroupsOnly: boolean = false;
   showActivePersonesOnly: boolean = false;
@@ -99,9 +99,9 @@ export class GroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleGroupTracking(group: GroupDto): void {
+  toggleGroupTracking(group: GroupModel): void {
     this.trackingService
-      .togglePersonTracking(group.id, group.shouldBeTracked)
+      .toggleGroupTracking(group)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         if (group == this.group) {
@@ -119,9 +119,9 @@ export class GroupsComponent implements OnInit, OnDestroy {
 
   }
 
-  togglePersonTracking(person: PersonDto): void {
+  togglePersonTracking(person: PersonModel): void {
     this.trackingService
-      .togglePersonTracking(person.id, person.shouldBeTracked)
+      .togglePersonTracking(person)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         if (person == this.person) {
@@ -142,16 +142,15 @@ export class GroupsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newPerson: PersonDto = {
+    const newPerson = {
       name: this.addPersonNameField.nativeElement.value,
       description: this.addPersonDescriptionField.nativeElement.value,
-      id: '',
       shouldBeTracked: true,
       groupId: this.group.id
-    };
+    } as PersonModel;
 
     this.trackingService
-      .addPerson(newPerson, this.group.id)
+      .addPerson(newPerson)
       .pipe(
         takeUntil(this.unsubscribe$),
         concatMap(() => this.loadAndSetPersones(this.group.id))
@@ -169,7 +168,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newGroup: GroupDto = {
+    const newGroup: GroupModel = {
       name: this.addGroupNameField.nativeElement.value,
       description: this.addGroupDescriptionField.nativeElement.value,
       shouldBeTracked: true,
@@ -192,7 +191,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onPersonSelected(person: PersonDto): void {
+  onPersonSelected(person: PersonModel): void {
     if (this.person) {
       if (this.person.id == person.id) {
         this.person = null;
@@ -202,7 +201,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
     this.person = person;
   }
 
-  onPersonChangeDescriptionModalToOpen(person: PersonDto): void {
+  onPersonChangeDescriptionModalToOpen(person: PersonModel): void {
     this.editPersonNameFromGroupPageField.nativeElement.value = person.name;
     this.editPersonDescriptionFromGroupPageField.nativeElement.value = person.description;
   }
@@ -212,7 +211,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const personWithNewNameAndDescription: PersonDto = {
+    const personWithNewNameAndDescription: PersonModel = {
       id: this.person.id,
       name: this.editPersonNameFromGroupPageField.nativeElement.value,
       description: this.editPersonDescriptionFromGroupPageField.nativeElement.value,
@@ -234,7 +233,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
 // todo: add validation on track
   }
 
-  onGroupSelected(group: GroupDto): void {
+  onGroupSelected(group: GroupModel): void {
     if (this.group) {
       if (this.group.id == group.id) {
         this.group = null;
@@ -247,7 +246,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
     this.loadAndSetPersones(this.group.id).subscribe();
   }
 
-  onGroupModalToOpen(group: GroupDto): void {
+  onGroupModalToOpen(group: GroupModel): void {
     this.editGroupNameField.nativeElement.value = group.name;
     this.editGroupDescriptionField.nativeElement.value = group.description;
   }
@@ -258,7 +257,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const groupWithNewNameAndDescription: GroupDto = {
+    const groupWithNewNameAndDescription: GroupModel = {
       id: this.group.id,
       name: this.editGroupNameField.nativeElement.value,
       description: this.editGroupDescriptionField.nativeElement.value,
@@ -288,7 +287,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       .getGroups()
       .pipe(
         takeUntil(this.unsubscribe$),
-        map((groupsResponse: GroupDto[]) => { 
+        map((groupsResponse: GroupModel[]) => { 
           this.groups = groupsResponse;
           this.tempGroups = null;
 
@@ -305,7 +304,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
       .getPersones(groupId)
       .pipe(
         takeUntil(this.unsubscribe$),
-        map((personesResponse: PersonDto[]) => { 
+        map((personesResponse: PersonModel[]) => { 
           this.persones = personesResponse;
           this.tempPersones = null;
 
