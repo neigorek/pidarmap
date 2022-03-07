@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryLis
 import { Observable, Subject } from 'rxjs';
 import { TrackingService } from 'src/app/services/tracking.service';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
-import { PersonModel, TrackModel } from 'src/app/models/dtos';
+import { PersonModel, TrackModel } from 'src/app/dtos-and-models';
 
 @Component({
   selector: 'app-main-dots',

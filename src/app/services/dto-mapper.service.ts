@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DrgGroupsDto, GeolocationDto, GroupModel, MonkeyDto, PersonModel, TrackModel } from '../models/dtos';
+import { DrgGroupsDto, GeolocationDto, GroupModel, MonkeyDto, PersonModel, TrackModel } from '../dtos-and-models';
 
 @Injectable({
   providedIn: 'root'

@@ -1,11 +1,22 @@
 <ul class="nav nav-tabs">
-  <li class="nav-item">
+  <li *ngIf="isAuthorized" class="nav-item">
     <a class="nav-link" [routerLink]="'/map'">Карта</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" [routerLink]="'/tracking'">Трекинг</a>
+  <li *ngIf="isAuthorized" class="nav-item">
+    <a class="nav-link" [routerLink]="'/tracking'">Трекінг</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" [routerLink]="'/admin'">Администратор</a>
+  <li *ngIf="isAuthorized" class="nav-item">
+    <a class="nav-link" [routerLink]="'/admin'">Адміністратор</a>
+  </li>
+
+  <li *ngIf="!isAuthorized" class="nav-item">
+    <a class="nav-link" [routerLink]="['/auth/login']">Увійти</a>
+  </li>
+  <li *ngIf="!isAuthorized" class="nav-item">
+    <a class="nav-link" [routerLink]="['/auth/register']">Реєстрація</a>
+  </li>
+
+  <li *ngIf="isAuthorized" class="nav-item nav-right pointer">
+    <a class="nav-link" (click)="onLogout()">Вийти: <span class="fw-bold">{{userName}}</span></a>
   </li>
 </ul>

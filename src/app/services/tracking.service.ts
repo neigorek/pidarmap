@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
-import { DrgGroupsDto, GroupModel, GroupWithMonkeysDto, MonkeyDto, MonkeyWithGeolocationsDto, PersonModel, PersonShortModel, TrackModel } from '../models/dtos';
+import { DrgGroupsDto, GroupModel, GroupWithMonkeysDto, MonkeyDto, MonkeyWithGeolocationsDto, PersonModel, PersonShortModel, TrackModel } from '../dtos-and-models';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { DtoMapperService } from './dto-mapper.service';
 import { map } from 'rxjs/internal/operators/map';

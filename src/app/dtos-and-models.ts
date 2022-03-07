@@ -1,3 +1,5 @@
+// models
+
 export interface PersonShortModel {
     id: string;
     name: string;
@@ -33,7 +35,7 @@ export interface PersonModel {
 
 
 
-
+// dtos
 
 export interface MonkeyDto {
     id: number;
