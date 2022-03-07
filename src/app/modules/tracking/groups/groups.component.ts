@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, map, takeUntil } from 'rxjs/operators';
-import { GroupModel, PersonModel } from 'src/app/models/dtos';
+import { GroupModel, PersonModel } from 'src/app/dtos-and-models';
 import { TrackingService } from 'src/app/services/tracking.service';
 
 @Component({

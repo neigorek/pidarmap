@@ -1,0 +1,22 @@
+<div class="container pt-2">
+    <div class="row">
+        <div class="col-6 mx-auto ">
+            <h5>Увійти</h5>
+            <form role="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                    <label for="userName" class="form-label">Логін*</label>
+                    <input #userNameInpup type="text" class="form-control" id="userName" formControlName="userName" placeholder="логін">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль*</label>
+                    <input #passwordInput type="password" class="form-control" id="password" formControlName="password" placeholder="пароль">
+                </div>
+                <div class="mb-3 form-check">
+                    <input #rememberCheckbox type="checkbox" class="form-check-input" id="remember" formControlName="remember" >
+                    <label class="form-check-label" for="remember">Запам'ятати</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Увійти</button>
+            </form>
+        </div>
+    </div>
+</div>
