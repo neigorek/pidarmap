@@ -40,6 +40,5 @@ export class LoginComponent implements OnInit {
     if (this.remember.value == true) {
       this.tokenManagerService.saveRememberMe();
     }
-
   }
 }
