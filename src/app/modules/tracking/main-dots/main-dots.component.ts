@@ -90,9 +90,7 @@ export class MainDotsComponent implements OnInit, OnDestroy {
     this.loadAndSetTracks(this.person.id).subscribe();
   }
 
-  onTrackSelected(track: TrackModel): void {
-    console.log(track);
-  }
+  onTrackSelected(track: TrackModel): void { }
 
 
   onTrackToAdd(shouldAdd: boolean): void {

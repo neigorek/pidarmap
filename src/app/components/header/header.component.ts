@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { TokenManagerService } from 'src/app/services/token-manager.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private tokenManagerService: TokenManagerService,
+    private authService: AuthService,
     private router: Router ) { }
 
   ngOnInit(): void {
@@ -39,7 +41,9 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout(): void {
-    this.tokenManagerService.clearUserData();
+    this.authService.logout().subscribe(() => {
+      this.tokenManagerService.clearUserData();
+    })
   }
 
 }

@@ -74,8 +74,9 @@ export class TrackingService {
       }
 
       const url = this.serverUrl +  `api/monkeys/${person.id}/`;
+      const monkeyDto = this.mapper.mapPersonToMonkey(person);
       return this.http
-        .patch<any>(url, {data: this.mapper.mapPersonToMonkey(person)})
+        .patch<any>(url, {name: monkeyDto.name});
     }
 
     // ---- short persones END
@@ -102,9 +103,21 @@ export class TrackingService {
         return of<boolean>(true);
       }
 
-      const url = this.serverUrl +  `api/geolocations/${track.personId}/`;
+      const url = this.serverUrl + 'api/geolocations/';
+      const trackDto = this.mapper.mapTrackToGeolocation(track);
       return this.http
-        .post<any>(url, {data: this.mapper.mapTrackToGeolocation(track) });
+        .post<any>(url, 
+          {
+            address: trackDto.address, 
+            azimuth: trackDto.azimuth, 
+            latitude: trackDto.latitude, 
+            longitude: trackDto.longitude, 
+            is_active: trackDto.is_active,
+            monkey: trackDto.monkey,
+            desc: '', 
+            datetime: trackDto.datetime 
+          }
+        );
     }
 
     toggleTrackTracking(track: TrackModel): Observable<any> {
@@ -112,9 +125,10 @@ export class TrackingService {
         return of<boolean>(true);
       }
 
-      const url = this.serverUrl +  `api/geolocations/${track.id}/`;
+      const url = this.serverUrl +  'api/geolocations/change_status/';
+      const trackDto = this.mapper.mapTrackToGeolocation(track);
       return this.http
-        .patch<any>(url, {data: this.mapper.mapTrackToGeolocation(track)})
+        .patch<any>(url, { is_active: trackDto.is_active, id: track.id });
     }
 
     // ---- tracks END
@@ -129,7 +143,7 @@ export class TrackingService {
         return of<GroupModel[]>(this.groups)
       }
 
-      const url = this.serverUrl +  'api/drggroups/active';
+      const url = this.serverUrl +  'api/drggroups/';
       return this.http
         .get<DrgGroupsDto[]>(url)
         .pipe(map(groups => groups.map(this.mapper.mapDrgGroupToGroup)));
@@ -141,8 +155,9 @@ export class TrackingService {
       }
 
       const url = this.serverUrl +  'api/drggroups/';
+      const groupDto = this.mapper.mapGroupToDrgGroup(group);
       return this.http
-        .post<any>(url, {data: this.mapper.mapGroupToDrgGroup(group) });
+        .post<any>(url, { name: groupDto.name, description:groupDto.description, is_active: groupDto.is_active });
     }
 
     updateGroupNameAndDescription(group: GroupModel): Observable<any> {
@@ -150,9 +165,10 @@ export class TrackingService {
         return of<boolean>(true);
       }
 
-      const url = this.serverUrl +  `api/drggroups/${group.id}`;
+      const url = this.serverUrl +  `api/drggroups/${group.id}/`;
+      const groupDto = this.mapper.mapGroupToDrgGroup(group);
       return this.http
-        .patch<any>(url, {data: this.mapper.mapGroupToDrgGroup(group)})
+        .patch<any>(url, {name: groupDto.name, description: groupDto.description });
     }
 
     toggleGroupTracking(group: GroupModel): Observable<any> {
@@ -160,9 +176,10 @@ export class TrackingService {
         return of<boolean>(true);
       }
 
-      const url = this.serverUrl +  'api/drggroups/change_status/';
+      const url = this.serverUrl + 'api/drggroups/change_status/';
+      const groupDto = this.mapper.mapGroupToDrgGroup(group);
       return this.http
-        .patch<any>(url, {data: this.mapper.mapGroupToDrgGroup(group)})
+        .patch<any>(url, {is_active: groupDto.is_active, id: group.id});
     }
 
     // ---- groups END
@@ -190,8 +207,9 @@ export class TrackingService {
       }
 
       const url = this.serverUrl +  'api/monkeys/';
+      const monkeyDto = this.mapper.mapPersonToMonkey(person);
       return this.http
-        .post<any>(url, {data: this.mapper.mapPersonToMonkey(person) });
+        .post<any>(url, {name: monkeyDto.name, group: monkeyDto.group, description: monkeyDto.description, is_active: monkeyDto.is_active });
     }
 
     updatePersonNameAndDescription(person: PersonModel): Observable<any> {
@@ -200,8 +218,9 @@ export class TrackingService {
       }
 
       const url = this.serverUrl +  `api/monkeys/${person.id}/`;
+      const monkeyDto = this.mapper.mapPersonToMonkey(person);
       return this.http
-        .patch<any>(url, {data: this.mapper.mapPersonToMonkey(person)});
+        .patch<any>(url, {name: monkeyDto.name, description: monkeyDto.description, is_active: monkeyDto.is_active });
     }
 
     togglePersonTracking(person: PersonModel): Observable<any> {
@@ -210,8 +229,9 @@ export class TrackingService {
       }
 
       const url = this.serverUrl +  'api/monkeys/change_status/';
+      const monkeyDto = this.mapper.mapPersonToMonkey(person);
       return this.http
-        .patch<any>(url, {data: this.mapper.mapPersonToMonkey(person)});
+        .patch<any>(url, {is_active: monkeyDto.is_active, id: person.id});
     }
 
     // ---- persones END

@@ -37,7 +37,7 @@ export class DtoMapperService {
       lat: +geolocaion.latitude,
       lng: +geolocaion.latitude,
       shouldBeTracked: geolocaion.is_active,
-      dateTime: new Date(geolocaion.datetime/ 10000),
+      dateTime: new Date(geolocaion.datetime),
       description: geolocaion.desc
     } as TrackModel;
   }
@@ -51,7 +51,7 @@ export class DtoMapperService {
       longitude: track.lng.toString(),
       is_active: track.shouldBeTracked,
       desc: track.description,
-      datetime: track.dateTime.getTime() * 10000,
+      datetime: track.dateTime.getTime(),
       monkey: +track.personId
     } as GeolocationDto;
   }

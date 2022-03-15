@@ -7,9 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { TrackingComponent } from './modules/tracking/tracking.component';
 import { AdminComponent } from './modules/admin/admin.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { GroupsComponent } from './modules/tracking/groups/groups.component';
 import { MainDotsComponent } from './modules/tracking/main-dots/main-dots.component';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { MainDotsComponent } from './modules/tracking/main-dots/main-dots.compon
     ReactiveFormsModule,
     FormsModule 
   ],
-  providers: [],
+  providers: [ 
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

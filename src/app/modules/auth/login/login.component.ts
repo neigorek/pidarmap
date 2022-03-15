@@ -1,5 +1,7 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthorizedUserDto } from 'src/app/dtos-and-models';
+import { AuthService } from 'src/app/services/auth.service';
 import { TokenManagerService } from 'src/app/services/token-manager.service';
 
 @Component({
@@ -10,6 +12,8 @@ import { TokenManagerService } from 'src/app/services/token-manager.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
+  errorFields: string[] = [];
+  isInvalid: boolean;
 	get userName() { return this.loginForm.get('userName'); }
 	get password() { return this.loginForm.get('password'); }
 	get remember() { return this.loginForm.get('remember'); }
@@ -18,7 +22,11 @@ export class LoginComponent implements OnInit {
 	@ViewChild('passwordInput', { static: true }) passwordInput: ElementRef;
   @ViewChild('rememberCheckbox', { static: true }) rememberCheckbox: ElementRef;
   
-  constructor(private tokenManagerService: TokenManagerService) { }
+
+  constructor(
+    private tokenManagerService: TokenManagerService,
+    private authService: AuthService) { }
+
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -26,19 +34,30 @@ export class LoginComponent implements OnInit {
 			'password': new FormControl('', [Validators.required]),
       'remember': new FormControl(''),
 		});
-
   }
 
-
-  onSubmit() {
+  onSubmit(): void {
     if (!this.loginForm.valid) {
       return;
     }
 
-    // todo: send server request 
-    this.tokenManagerService.saveUserData(this.password.value, this.userName.value);
-    if (this.remember.value == true) {
-      this.tokenManagerService.saveRememberMe();
-    }
+    this.authService
+      .login(this.userName.value, this.password.value)
+      .subscribe((authorizedUser: AuthorizedUserDto) => {
+        this.isInvalid = false;
+        this.errorFields = [];
+
+        this.tokenManagerService.saveUserData(authorizedUser.auth_token, authorizedUser.id, authorizedUser.username);
+        if (this.remember.value == true) {
+          this.tokenManagerService.saveRememberMe();
+        }
+      },
+      (error) => {
+        this.errorFields = [];
+        error.error.forEach(err => {
+          this.errorFields.push(err);
+        });
+        this.isInvalid = true;
+      });
   }
 }

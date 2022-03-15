@@ -81,3 +81,15 @@ export interface MonkeyDto {
     description: string;
     is_active: boolean;
 }
+
+export interface AuthorizedUserDto {
+    id: number;
+    username: string;
+    auth_token: string;
+}
+
+export interface RegisteredUserDto {
+    id: number;
+    username: string;
+    auth_token: string;
+}
