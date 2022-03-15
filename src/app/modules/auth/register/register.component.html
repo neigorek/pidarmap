@@ -2,6 +2,9 @@
     <div class="row">
         <div class="col-6 mx-auto ">
             <h5>Створити аккаунт</h5>
+            <div *ngIf="isInvalid && errorFields"> 
+                <span class="text-danger" *ngFor="let err of errorFields">{{err}} <br></span>     
+            </div>
             <form role="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()"  autocomplete="off">
                 <div class="mb-3">
                     <label for="newUserName" class="form-label">Логін*</label>
